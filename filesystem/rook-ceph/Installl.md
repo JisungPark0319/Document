@@ -40,12 +40,15 @@ echo disk reset...
 
 for disk in ${disk_arr[@]}; do
   DISK=/dev/sd$disk
-  wipefs -a $DISK
   sgdisk --zap-all $DISK
   dd if=/dev/zero of="$DISK" bs=1M count=100 oflag=direct,dsync
   blkdiscard $DISK
+  partprobe $DISK
 done
+
+ls /dev/mapper/ceph-* | xargs -I% -- dmsetup remove %
 rm -rf /dev/ceph-*
+rm -rf /dev/mapper/ceph--*
 
 echo disk reset end
 ```
