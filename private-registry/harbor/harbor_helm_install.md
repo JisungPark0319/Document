@@ -9,6 +9,9 @@
 - PVC that can be shared across nodes or external object storage
 
 ## Architecture
+
+- 현재 실습에서는 외부 PostgreSQL, Redis 사용하지 않고 Helm으로 설치되는 PostgreSQL, Redis를 사용합니다.
+
 ![HA architecture](image/harbor-ha-architecture.png)
 
 ## Helm Repo add
@@ -58,7 +61,7 @@ helm show values harbor/harbor > harbor_values.yaml
     keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
     extendedKeyUsage = serverAuth
     subjectAltName = @alt_names
-
+    
     [alt_names]
     DNS.1=harbor.com
     DNS.2=harbor
@@ -89,7 +92,7 @@ helm show values harbor/harbor > harbor_values.yaml
 4. kubernetes tls secret 생성
     ```bash
     kubectl create ns harbor-system
-
+    
     kubectl create secret tls harbor-tls-secret \
         -n harbor-system \
         --cert=/root/tls/harbor.com.cert \
