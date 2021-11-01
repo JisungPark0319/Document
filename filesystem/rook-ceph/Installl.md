@@ -1,8 +1,34 @@
 # Rook Ceph Install
 
+### Ceph
+
+- 오픈소스의 스토리지 플랫폼입니다.
+- Ceph은 Storage Clustering을 해주고 Object Storage, Block Storage, FileSystem Storage 서비스를 제공합니다.
+
 - https://rook.io/
 
 - rook ceph 1.7 버전으로 진행합니다.
+
+### Rook Ceph 전제 조건
+
+- kubernetes v1.11이상 v1.21 이하를 지원합니다.
+  
+- 클러스터 스토리지 이므로, 3개 이상의 노드가 필요합니다.
+
+- 스토리지는 다음 조건 중 하나 이상이 필요합니다.
+
+  - Raw devices (파티션 또는 포맷 된 파일 시스템 없음)
+  - Raw partitions (포맷 된 파일 시스템 없음)
+  - block 모드의 스토리지 클래스에서 사용 가능한 PV
+
+- Ceph OSD는 LVM에 종속됩니다.
+
+  - OSD는 raw device 또는 raw partion에 생성됩니다.
+  - LVM2 패키지가 필요합니다.
+
+  ```bash
+  yum install -y lvm2
+  ```
 
 ### Rook Ceph Git
 
@@ -18,17 +44,6 @@ kubectl create -f crds.yaml -f common.yaml -f operator.yaml
 ```
 
 ### Disk 정리
-
-- Ceph 스토리지 클러스터 구성 시
-  - LVM2가 설치되어 있어야 합니다.
-  - 파티션 설정이 안 되어 있어야 합니다.
-- LVM2 설치
-
-``` bash
-sudo yum install lvm2
-```
-
-- Disk 정리
 
 ```bash
 #!/usr/bin/env bash
