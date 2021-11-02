@@ -103,7 +103,7 @@ helm show values harbor/harbor > harbor_values.yaml
 - 별도의 storageClass 및 pv,pvc를 생성은 진행하지 않아 persistence disalbe합니다.
 ```bash
 helm install --namespace harbor-system --create-namespace \
-    harbor harbor/harbor \
+	harbor harbor/harbor \
     --set expose.secretName=harbor-tls-secret \
     --set expose.ingress.hosts.core=core.harbor.com \
     --set expose.ingress.hosts.notary=notary.harbor.com \
@@ -117,5 +117,49 @@ helm install --namespace harbor-system --create-namespace \
 
 ![main page](image/harbor-mainpage.png)
 
+## Harbor Persistence 설정
+
+- aws s3, ceph object storage 등 object storage에 이미지 데이터 저장 설정
+
+- persistence volume storage class 설정
+
+- container image push 시 연동한 object storage에 저장됩니다.
+
+  ```bash
+  helm install --wait harbor --namespace harbor-system harbor/harbor \
+      --set persistence.enabled=true \
+  	--set persistence.persistentVolumeClaim.registry.storageClass=[storage class] \
+      --set persistence.persistentVolumeClaim.chartmuseum.storageClass=[storage class] \
+      --set persistence.persistentVolumeClaim.jobservice.storageClass=[storage class] \
+      --set persistence.persistentVolumeClaim.database.storageClass=[storage class] \
+      --set persistence.persistentVolumeClaim.redis.storageClass=[storage class] \
+      --set persistence.persistentVolumeClaim.trivy.storageClass=[storage class] \
+      --set persistence.imageChartStorage.type=s3 \
+      --set persistence.imageChartStorage.s3.bucket=[bucket name] \
+      --set persistence.imageChartStorage.s3.accesskey=[access key] \
+      --set persistence.imageChartStorage.s3.secretkey=[secretkey] \
+      --set persistence.imageChartStorage.s3.regionendpoint=[endpoint] \
+      --set externalURL=https://core.harbor.com \
+      --set harborAdminPassword=admin
+  ```
+
+## Ingress 설정
+
+- ingress tls 설정을 위해 secret tls를 먼저 생성 후 진행합니다.
+
+    ```bash
+    kubectl create secret tls harbor-tls -n harbor-system \
+    	--cert=/root/tls/harbor.com.cert \
+        --key=/root/tls/harbor.com.key
+    
+    helm install --wait harbor --namespace harbor-system harbor/harbor \
+    	--set expose.ingress.hosts.core=core.harbor.com \
+        --set expose.ingress.hosts.notary=notary.harbor.com \
+        --set expose.tls.certSource=secret \
+        --set expose.tls.secret.secretName=harbor-tls \
+        --set expose.tls.secret.notarySecretName=harbor-tls \
+    ```
+
 ## Reference
+
 - https://goharbor.io/docs/2.3.0/install-config/harbor-ha-helm/
