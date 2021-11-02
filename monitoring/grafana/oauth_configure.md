@@ -40,6 +40,10 @@ docker run -d -p 8080:8080 -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin --n
 
 - 설정 Save하면 Settings창으로 이동됩니다.
 - 이미지와 같이 setting 후 Save 클릭 (grafana port: 3000)
+- 이미지에서 변경되 옵션
+  - Valid Redirect URIs: http://172.31.241.16:3000/login/generic_oauth
+  - rootUrl: http://172.31.241.16:3000
+  - baseUrl: /login/generic_oauth
 
 ![image-client-setting](./img/client_setting.png)
 
@@ -77,6 +81,7 @@ docker run -d -p 8080:8080 -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin --n
 ```bash
 docker run -d -p 3000:3000 --name grafana \
 -e GF_SERVER_DOMAIN=172.31.241.16 \
+-e GF_SERVER_ROOT_URL=http://172.31.241.16:3000 \
 -e GF_AUTH_GENERIC_OAUTH_ENABLED=true \
 -e GF_AUTH_GENERIC_OAUTH_NAME=keycloakOAuth \
 -e GF_AUTH_GENERIC_OAUTH_ALLOW_SIGN_UP=true \
@@ -86,7 +91,10 @@ docker run -d -p 3000:3000 --name grafana \
 -e GF_AUTH_GENERIC_OAUTH_AUTH_URL=http://172.31.249.234:8080/auth/realms/basic/protocol/openid-connect/auth \
 -e GF_AUTH_GENERIC_OAUTH_TOKEN_URL=http://172.31.249.234:8080/auth/realms/basic/protocol/openid-connect/token \
 -e GF_AUTH_GENERIC_OAUTH_API_URL=http://172.31.249.234:8080/auth/realms/basic/protocol/openid-connect/userinfo \
+-e GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH="contains(roles[*], 'admin') && 'Admin' || contains(roles[*], 'editor') && 'Editor' || 'Viewer'" \
 grafana/grafana:8.2.2
 ```
+
+
 
 ![image-grafana](./img/grafana_login.png)
