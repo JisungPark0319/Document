@@ -53,7 +53,7 @@
   	    app: sso
     client:
       clientId: exampleClient
-    	# openssl rand -hex32 | base64  
+    	# openssl rand -hex 32 | base64  
       secret: YmI5ZGI2ZWI5NWNmNjk4ZjI3ZDViNTFjYTdiNzk2YzIwOTg1MDNiZDU1YmU5MTE1OWJmNTE4NGNkZGE1MGIzMAo=
       clientAuthenticatorType: public
       protocol: openid-connect
