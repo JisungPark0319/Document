@@ -51,7 +51,7 @@ docker run -d -p 8080:8080 -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin --n
 
 - grafana docker로 실행 시 grafana.ini 파일의 설정을 변경 하지 않고 environment를 통해 옵션을 설정할 수 있습니다.
 
-- env 설정 시 구문: GF_<sectionName>__<KeyName>
+- env 설정 시 구문: GF_\<sectionName>__\<KeyName>
 
   - env key name은 대문자로 기입합니다.
 
