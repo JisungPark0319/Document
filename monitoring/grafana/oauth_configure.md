@@ -92,6 +92,7 @@ docker run -d -p 3000:3000 --name grafana \
 -e GF_AUTH_GENERIC_OAUTH_TOKEN_URL=http://172.31.249.234:8080/auth/realms/basic/protocol/openid-connect/token \
 -e GF_AUTH_GENERIC_OAUTH_API_URL=http://172.31.249.234:8080/auth/realms/basic/protocol/openid-connect/userinfo \
 -e GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH="contains(roles[*], 'admin') && 'Admin' || contains(roles[*], 'editor') && 'Editor' || 'Viewer'" \
+-e GF_AUTH_SIGNOUT_REDIRECT_URL="http://172.31.249.234:8080/auth/realms/kubernetes/protocol/openid-connect/logout?redirect_uri=http://172.31.241.16:3000/login/generic_oauth" \
 grafana/grafana:8.2.2
 ```
 
